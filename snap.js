@@ -212,7 +212,6 @@ Snap = null;
                                 });
                             } else {
                                 settings.$element.css({
-                                    width: (win.innerWidth || doc.documentElement.clientWidth)+'px',
                                     left: `${n}px`,
                                     right: ''
                                 });
