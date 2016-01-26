@@ -31,7 +31,8 @@ Snap = null;
                     touchToDrag: true,
                     slideIntent: 40, // degrees
                     minDragDistance: 5,
-                    stopPropagation: true
+                    stopPropagation: true,
+                    disableTransform: true
                 },
                 cache = {
                     simpleStates: {
@@ -97,7 +98,7 @@ Snap = null;
                         return (cache.vendor==='Moz' || cache.vendor==='ms') ? 'transitionend' : cache.vendor+'TransitionEnd';
                     },
                     canTransform: function(){
-                        return typeof settings.element.style[cache.vendor+'Transform'] !== 'undefined';
+                        return typeof settings.element.style[cache.vendor+'Transform'] !== 'undefined' && !settings.disableTransform;
                     },
                     angleOfDrag: function(x, y) {
                         var degrees, theta;
