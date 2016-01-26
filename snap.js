@@ -10,9 +10,10 @@
  */
 /*jslint browser: true*/
 /*global define, module, ender*/
+Snap = null;
 (function(win, doc) {
     'use strict';
-    var Snap = Snap || function(userOpts) {
+    Snap = Snap || function(userOpts) {
         var settings = {
             element: null,
             dragger: null,
