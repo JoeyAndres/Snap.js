@@ -30,7 +30,8 @@ Snap = null;
                     tapToClose: true,
                     touchToDrag: true,
                     slideIntent: 40, // degrees
-                    minDragDistance: 5
+                    minDragDistance: 5,
+                    stopPropagation: true
                 },
                 cache = {
                     simpleStates: {
@@ -240,7 +241,6 @@ Snap = null;
                                 return;
                             }
 
-
                             if(settings.dragger){
                                 var dragParent = settings.$element.parent(settings.dragger).get(0);
 
@@ -279,10 +279,12 @@ Snap = null;
                                     percentage: 0
                                 }
                             };
+
+                            if (settings.stopPropagation) e.stopPropagation();
                         },
                         dragging: function(e) {
                             if (cache.isDragging && settings.touchToDrag) {
-
+                                if (settings.stopPropagation) e.stopPropagation();
                                 var thePageX = utils.page('X', e),
                                     thePageY = utils.page('Y', e),
                                     translated = cache.translation,
@@ -388,6 +390,7 @@ Snap = null;
                         },
                         endDrag: function(e) {
                             if (cache.isDragging) {
+                                if (settings.stopPropagation) e.stopPropagation();
                                 utils.dispatchEvent('end');
                                 var translated = action.translate.get.matrix(4);
 
