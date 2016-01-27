@@ -1,4 +1,4 @@
-# Snap.js
+# Snap-Extended.js
 A Library for creating beautiful mobile shelfs in Javascript
 
 <a href="http://www.screenr.com/embed/0EJ7" target="_blank">View Video Preview</a>
@@ -55,6 +55,12 @@ As a <a href="http://component.io" target="_blank">web component</a> do:
 
 ```shell
 $ component install jakiestfu/Snap.js
+```
+
+For Meteor:
+
+```bash
+meteor add jandres:snap-extended
 ```
 
 ## Usage
