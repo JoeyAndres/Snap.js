@@ -1,8 +1,8 @@
 Package.describe({
     name: "jandres:snapjs",
     summary: "A Library for creating beautiful mobile shelfs in Javascript (Facebook and Path style side menus)",
-    version: "1.9.3",
-    git: "https://github.com/JoeyAndres/meteor-ionic.git"
+    version: "1.9.4",
+    git: "https://github.com/JoeyAndres/Snap.js.git"
 });
 
 Package.onUse(function(api) {
