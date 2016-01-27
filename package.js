@@ -1,7 +1,7 @@
 Package.describe({
     name: "jandres:snapjs-extended",
     summary: "A Library for creating beautiful mobile shelfs in Javascript (Facebook and Path style side menus)",
-    version: "1.9.6",
+    version: "1.9.7",
     git: "https://github.com/JoeyAndres/legacy-drag.js.git"
 });
 
