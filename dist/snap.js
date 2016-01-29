@@ -10,10 +10,9 @@
  */
 /*jslint browser: true*/
 /*global define, module, ender*/
-Snap = null;
 (function(win, doc) {
     'use strict';
-    Snap = Snap || function(userOpts) {
+    var Snap = function(userOpts) {
         var settings = {
             element: null,
             dragger: null,
@@ -555,6 +554,9 @@ Snap = null;
         };
         init(userOpts);
     };
+    if ((typeof win !== 'undefined') && !win.Snap) {
+        win.Snap = Snap;
+    }
     if ((typeof module !== 'undefined') && module.exports) {
         module.exports = Snap;
     }
