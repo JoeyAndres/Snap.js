@@ -1565,12 +1565,12 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
             }
 
             if (utils.canTransform()) {
-              var theTranslate = 'translate3d(' + n + 'px, 0,0)';
+              var theTranslate = "translate3d(" + n + "px, 0,0)";
               settings.element.style[cache.vendor + 'Transform'] = theTranslate;
             } else {
               settings.element.style.width = (window.innerWidth || document.documentElement.clientWidth) + 'px';
 
-              settings.element.style.left = n + 'px';
+              settings.element.style.left = n + "px";
               settings.element.style.right = '';
             }
           }
