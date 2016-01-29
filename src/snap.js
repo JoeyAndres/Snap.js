@@ -5,15 +5,13 @@
  * Released under the MIT Licence
  * http://opensource.org/licenses/MIT
  *
- * Github:  http://github.com/jakiestfu/Snap.js/
- * Version: 1.9.3
+ * Copyright 2016, Joey Andres
  */
-/*jslint browser: true*/
-/*global define, module, ender*/
-(function(win, doc) {
-    'use strict';
-    var Snap = function(userOpts) {
-        var settings = {
+
+require("pepjs");
+
+var Snap = function(userOpts) {
+    var settings = {
             element: null,
             dragger: null,
             disable: 'none',
@@ -47,18 +45,17 @@
         },
         eventList = {},
         utils = {
-            hasTouch: ('ontouchstart' in doc.documentElement || win.navigator.msPointerEnabled),
             eventType: function(action) {
                 var eventTypes = {
-                        down: (utils.hasTouch ? 'touchstart' : 'mousedown'),
-                        move: (utils.hasTouch ? 'touchmove' : 'mousemove'),
-                        up: (utils.hasTouch ? 'touchend' : 'mouseup'),
-                        out: (utils.hasTouch ? 'touchcancel' : 'mouseout')
-                    };
+                    down: 'pointerdown',
+                    move: 'pointermove',
+                    up: 'pointerup',
+                    out: 'pointerout'
+                };
                 return eventTypes[action];
             },
             page: function(t, e){
-                return (utils.hasTouch && e.touches.length && e.touches[0]) ? e.touches[0]['page'+t] : e['page'+t];
+                return e[`page${t}`];
             },
             klass: {
                 has: function(el, name){
@@ -81,7 +78,7 @@
                 }
             },
             vendor: function(){
-                var tmp = doc.createElement("div"),
+                var tmp = document.createElement("div"),
                     prefixes = 'webkit Moz O ms'.split(' '),
                     i;
                 for (i in prefixes) {
@@ -166,7 +163,7 @@
                         if( !utils.canTransform() ){
                             return parseInt(settings.element.style.left, 10);
                         } else {
-                            var matrix = win.getComputedStyle(settings.element)[cache.vendor+'Transform'].match(/\((.*)\)/),
+                            var matrix = window.getComputedStyle(settings.element)[cache.vendor+'Transform'].match(/\((.*)\)/),
                                 ieOffset = 8;
                             if (matrix) {
                                 matrix = matrix[1].split(',');
@@ -186,8 +183,8 @@
                     clearInterval(cache.animatingInterval);
 
                     if(cache.easingTo===0){
-                        utils.klass.remove(doc.body, 'snapjs-right');
-                        utils.klass.remove(doc.body, 'snapjs-left');
+                        utils.klass.remove(document.body, 'snapjs-right');
+                        utils.klass.remove(document.body, 'snapjs-left');
                     }
 
                     utils.dispatchEvent('animated');
@@ -207,19 +204,19 @@
                         cache.animatingInterval = setInterval(function() {
                             utils.dispatchEvent('animating');
                         }, 1);
-                        
+
                         utils.events.addEvent(settings.element, utils.transitionCallback(), action.translate.easeCallback);
                         action.translate.x(n);
                     }
                     if(n===0){
-                           settings.element.style[cache.vendor+'Transform'] = '';
-                       }
+                        settings.element.style[cache.vendor+'Transform'] = '';
+                    }
                 },
                 x: function(n) {
                     if( (settings.disable==='left' && n>0) ||
                         (settings.disable==='right' && n<0)
                     ){ return; }
-                    
+
                     if( !settings.hyperextensible ){
                         if( n===settings.maxPosition || n>settings.maxPosition ){
                             n=settings.maxPosition;
@@ -227,7 +224,7 @@
                             n=settings.minPosition;
                         }
                     }
-                    
+
                     n = parseInt(n, 10);
                     if(isNaN(n)){
                         n = 0;
@@ -237,7 +234,7 @@
                         var theTranslate = 'translate3d(' + n + 'px, 0,0)';
                         settings.element.style[cache.vendor+'Transform'] = theTranslate;
                     } else {
-                        settings.element.style.width = (win.innerWidth || doc.documentElement.clientWidth)+'px';
+                        settings.element.style.width = (window.innerWidth || document.documentElement.clientWidth)+'px';
 
                         settings.element.style.left = n+'px';
                         settings.element.style.right = '';
@@ -261,25 +258,25 @@
                     // No drag on ignored elements
                     var target = e.target ? e.target : e.srcElement,
                         ignoreParent = utils.parentUntil(target, 'data-snap-ignore');
-                    
+
                     if (ignoreParent) {
                         utils.dispatchEvent('ignore');
                         return;
                     }
-                    
-                    
+
+
                     if(settings.dragger){
                         var dragParent = utils.parentUntil(target, settings.dragger);
-                        
+
                         // Only use dragger if we're in a closed state
-                        if( !dragParent && 
-                            (cache.translation !== settings.minPosition && 
-                            cache.translation !== settings.maxPosition
-                        )){
+                        if( !dragParent &&
+                            (cache.translation !== settings.minPosition &&
+                                cache.translation !== settings.maxPosition
+                            )){
                             return;
                         }
                     }
-                    
+
                     utils.dispatchEvent('start');
                     settings.element.style[cache.vendor+'Transition'] = '';
                     cache.isDragging = true;
@@ -326,11 +323,11 @@
 
                         if(settings.addBodyClasses){
                             if((absoluteTranslation)>0){
-                                utils.klass.add(doc.body, 'snapjs-left');
-                                utils.klass.remove(doc.body, 'snapjs-right');
+                                utils.klass.add(document.body, 'snapjs-left');
+                                utils.klass.remove(document.body, 'snapjs-right');
                             } else if((absoluteTranslation)<0){
-                                utils.klass.add(doc.body, 'snapjs-right');
-                                utils.klass.remove(doc.body, 'snapjs-left');
+                                utils.klass.add(document.body, 'snapjs-right');
+                                utils.klass.remove(document.body, 'snapjs-left');
                             }
                         }
 
@@ -465,107 +462,99 @@
                 }
             }
         },
-        init = function(opts) {
+        _init = function(opts) {
             if (opts.element) {
                 utils.deepExtend(settings, opts);
-                cache.vendor = utils.vendor();
-                action.drag.listen();
-            }
-        };
-        /*
-         * Public
-         */
-        this.open = function(side) {
-            utils.dispatchEvent('open');
-            utils.klass.remove(doc.body, 'snapjs-expand-left');
-            utils.klass.remove(doc.body, 'snapjs-expand-right');
-
-            if (side === 'left') {
-                cache.simpleStates.opening = 'left';
-                cache.simpleStates.towards = 'right';
-                utils.klass.add(doc.body, 'snapjs-left');
-                utils.klass.remove(doc.body, 'snapjs-right');
-                action.translate.easeTo(settings.maxPosition);
-            } else if (side === 'right') {
-                cache.simpleStates.opening = 'right';
-                cache.simpleStates.towards = 'left';
-                utils.klass.remove(doc.body, 'snapjs-left');
-                utils.klass.add(doc.body, 'snapjs-right');
-                action.translate.easeTo(settings.minPosition);
-            }
-        };
-        this.close = function() {
-            utils.dispatchEvent('close');
-            action.translate.easeTo(0);
-        };
-        this.expand = function(side){
-            var to = win.innerWidth || doc.documentElement.clientWidth;
-
-            if(side==='left'){
-                utils.dispatchEvent('expandLeft');
-                utils.klass.add(doc.body, 'snapjs-expand-left');
-                utils.klass.remove(doc.body, 'snapjs-expand-right');
+                settings.element.setAttribute("touch-action", "pan-y");
             } else {
-                utils.dispatchEvent('expandRight');
-                utils.klass.add(doc.body, 'snapjs-expand-right');
-                utils.klass.remove(doc.body, 'snapjs-expand-left');
-                to *= -1;
+                throw "Snap's element argument does not exist.";
             }
-            action.translate.easeTo(to);
-        };
-
-        this.on = function(evt, fn) {
-            eventList[evt] = fn;
-            return this;
-        };
-        this.off = function(evt) {
-            if (eventList[evt]) {
-                eventList[evt] = false;
-            }
-        };
-
-        this.enable = function() {
-            utils.dispatchEvent('enable');
+        },
+        init = function(opts) {
+            _init(opts);
+            cache.vendor = utils.vendor();
             action.drag.listen();
         };
-        this.disable = function() {
-            utils.dispatchEvent('disable');
-            action.drag.stopListening();
-        };
+    /*
+     * Public
+     */
+    this.open = function(side) {
+        utils.dispatchEvent('open');
+        utils.klass.remove(document.body, 'snapjs-expand-left');
+        utils.klass.remove(document.body, 'snapjs-expand-right');
 
-        this.settings = function(opts){
-            utils.deepExtend(settings, opts);
-        };
-
-        this.state = function() {
-            var state,
-                fromLeft = action.translate.get.matrix(4);
-            if (fromLeft === settings.maxPosition) {
-                state = 'left';
-            } else if (fromLeft === settings.minPosition) {
-                state = 'right';
-            } else {
-                state = 'closed';
-            }
-            return {
-                state: state,
-                info: cache.simpleStates
-            };
-        };
-        init(userOpts);
+        if (side === 'left') {
+            cache.simpleStates.opening = 'left';
+            cache.simpleStates.towards = 'right';
+            utils.klass.add(document.body, 'snapjs-left');
+            utils.klass.remove(document.body, 'snapjs-right');
+            action.translate.easeTo(settings.maxPosition);
+        } else if (side === 'right') {
+            cache.simpleStates.opening = 'right';
+            cache.simpleStates.towards = 'left';
+            utils.klass.remove(document.body, 'snapjs-left');
+            utils.klass.add(document.body, 'snapjs-right');
+            action.translate.easeTo(settings.minPosition);
+        }
     };
-    if ((typeof win !== 'undefined') && !win.Snap) {
-        win.Snap = Snap;
-    }
-    if ((typeof module !== 'undefined') && module.exports) {
-        module.exports = Snap;
-    }
-    if (typeof ender === 'undefined') {
-        this.Snap = Snap;
-    }
-    if ((typeof define === "function") && define.amd) {
-        define("snap", [], function() {
-            return Snap;
-        });
-    }
-}).call(this, window, document);
+    this.close = function() {
+        utils.dispatchEvent('close');
+        action.translate.easeTo(0);
+    };
+    this.expand = function(side){
+        var to = window.innerWidth || document.documentElement.clientWidth;
+
+        if(side==='left'){
+            utils.dispatchEvent('expandLeft');
+            utils.klass.add(document.body, 'snapjs-expand-left');
+            utils.klass.remove(document.body, 'snapjs-expand-right');
+        } else {
+            utils.dispatchEvent('expandRight');
+            utils.klass.add(document.body, 'snapjs-expand-right');
+            utils.klass.remove(document.body, 'snapjs-expand-left');
+            to *= -1;
+        }
+        action.translate.easeTo(to);
+    };
+
+    this.on = function(evt, fn) {
+        eventList[evt] = fn;
+        return this;
+    };
+    this.off = function(evt) {
+        if (eventList[evt]) {
+            eventList[evt] = false;
+        }
+    };
+
+    this.enable = function() {
+        utils.dispatchEvent('enable');
+        action.drag.listen();
+    };
+    this.disable = function() {
+        utils.dispatchEvent('disable');
+        action.drag.stopListening();
+    };
+
+    this.settings = function(opts){
+        _init(opts);
+    };
+
+    this.state = function() {
+        var state,
+            fromLeft = action.translate.get.matrix(4);
+        if (fromLeft === settings.maxPosition) {
+            state = 'left';
+        } else if (fromLeft === settings.minPosition) {
+            state = 'right';
+        } else {
+            state = 'closed';
+        }
+        return {
+            state: state,
+            info: cache.simpleStates
+        };
+    };
+    init(userOpts);
+};
+module.exports = Snap;

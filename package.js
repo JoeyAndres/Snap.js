@@ -7,14 +7,9 @@ Package.describe({
 
 Package.onUse(function(api) {
     api.versionsFrom("1.2.1");
-    api.use([
-        "ecmascript"
-    ], 'client');
 
     api.addFiles([
         "dist/snap.js",
         "dist/snap.css"
-    ]);
-
-    api.export('Snap');
+    ], 'client');
 });

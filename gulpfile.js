@@ -7,7 +7,9 @@ var path = require('path'),
     rename = require("gulp-rename"),
     minifyCSS = require('gulp-minify-css'),
     browserify = require('gulp-browserify'),
-    uglify = require('gulp-uglify');
+    uglify = require('gulp-uglify'),
+    rename = require("gulp-rename"),
+    babel = require("gulp-babel");
 
 var paths = {
     js: ['./src/**/*.js'],
@@ -28,7 +30,13 @@ gulp.task('css', function () {
 
 // JS section.
 gulp.task('js', function() {
-    gulp.src('./src/snap.js')
+    gulp.src('./src/main.js')
+        .pipe(rename({
+            basename: 'snap',
+            extname: '.js'
+        }))
+        .pipe(browserify())
+        .pipe(babel())
         .pipe(gulp.dest('./dist'))
         .pipe(uglify())
         .pipe(rename({suffix: '.min'}))
