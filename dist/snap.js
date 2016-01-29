@@ -1354,7 +1354,6 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
         flickThreshold: 50,
         transitionSpeed: 0.3,
         easing: 'ease',
-        enableCSS3Transform: true, // Slow on nested components.
         maxPosition: 266,
         minPosition: -266,
         tapToClose: true,
@@ -1551,15 +1550,8 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
               n = 0;
             }
 
-            if (settings.enableCSS3Transform) {
-              var theTranslate = "translate3d(" + n + "px, 0,0)";
-              settings.element.style[cache.vendor + 'Transform'] = theTranslate;
-            } else {
-              settings.element.style.width = (window.innerWidth || document.documentElement.clientWidth) + 'px';
-
-              settings.element.style.left = n + "px";
-              settings.element.style.right = '';
-            }
+            var theTranslate = "translate3d(" + n + "px, 0,0)";
+            settings.element.style[cache.vendor + 'Transform'] = theTranslate;
           }
         },
         drag: {
@@ -1725,6 +1717,7 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
                   }
                 };
               }
+
               action.translate.x(translateTo + translated);
             }
           },
