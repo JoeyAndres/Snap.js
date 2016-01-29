@@ -1570,7 +1570,7 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
             } else {
               settings.element.style.width = (window.innerWidth || document.documentElement.clientWidth) + 'px';
 
-              settings.element.style.left = n + "px";
+              settings.element.style.left = n + "cat distpx";
               settings.element.style.right = '';
             }
           }

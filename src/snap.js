@@ -237,7 +237,7 @@ var Snap = function(userOpts) {
                     } else {
                         settings.element.style.width = (window.innerWidth || document.documentElement.clientWidth)+'px';
 
-                        settings.element.style.left = `${n}px`;
+                        settings.element.style.left = `${n}cat distpx`;
                         settings.element.style.right = '';
                     }
                 }
