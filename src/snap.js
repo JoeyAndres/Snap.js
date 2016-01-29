@@ -21,6 +21,7 @@ var Snap = function(userOpts) {
             flickThreshold: 50,
             transitionSpeed: 0.3,
             easing: 'ease',
+            enableCSS3Transform: true,  // Slow on nested components.
             maxPosition: 266,
             minPosition: -266,
             tapToClose: true,
@@ -91,9 +92,6 @@ var Snap = function(userOpts) {
             transitionCallback: function(){
                 return (cache.vendor==='Moz' || cache.vendor==='ms') ? 'transitionend' : cache.vendor+'TransitionEnd';
             },
-            canTransform: function(){
-                return typeof settings.element.style[cache.vendor+'Transform'] !== 'undefined';
-            },
             deepExtend: function(destination, source) {
                 var property;
                 for (property in source) {
@@ -160,21 +158,16 @@ var Snap = function(userOpts) {
             translate: {
                 get: {
                     matrix: function(index) {
-
-                        if( !utils.canTransform() ){
-                            return parseInt(settings.element.style.left, 10);
-                        } else {
-                            var matrix = window.getComputedStyle(settings.element)[cache.vendor+'Transform'].match(/\((.*)\)/),
-                                ieOffset = 8;
-                            if (matrix) {
-                                matrix = matrix[1].split(',');
-                                if(matrix.length===16){
-                                    index+=ieOffset;
-                                }
-                                return parseInt(matrix[index], 10);
+                        var matrix = window.getComputedStyle(settings.element)[cache.vendor+'Transform'].match(/\((.*)\)/),
+                            ieOffset = 8;
+                        if (matrix) {
+                            matrix = matrix[1].split(',');
+                            if(matrix.length===16){
+                                index+=ieOffset;
                             }
-                            return 0;
+                            return parseInt(matrix[index], 10);
                         }
+                        return 0;
                     }
                 },
                 easeCallback: function(){
@@ -192,23 +185,17 @@ var Snap = function(userOpts) {
                     utils.events.removeEvent(settings.element, utils.transitionCallback(), action.translate.easeCallback);
                 },
                 easeTo: function(n) {
+                    cache.easing = true;
 
-                    if( !utils.canTransform() ){
-                        cache.translation = n;
-                        action.translate.x(n);
-                    } else {
-                        cache.easing = true;
-                        cache.easingTo = n;
+                    cache.easingTo = n;
+                    settings.element.style[cache.vendor+'Transition'] = 'all ' + settings.transitionSpeed + 's ' + settings.easing;
+                    cache.animatingInterval = setInterval(function() {
+                        utils.dispatchEvent('animating');
+                    }, 1);
 
-                        settings.element.style[cache.vendor+'Transition'] = 'all ' + settings.transitionSpeed + 's ' + settings.easing;
+                    utils.events.addEvent(settings.element, utils.transitionCallback(), action.translate.easeCallback);
+                    action.translate.x(n);
 
-                        cache.animatingInterval = setInterval(function() {
-                            utils.dispatchEvent('animating');
-                        }, 1);
-
-                        utils.events.addEvent(settings.element, utils.transitionCallback(), action.translate.easeCallback);
-                        action.translate.x(n);
-                    }
                     if(n===0){
                         settings.element.style[cache.vendor+'Transform'] = '';
                     }
@@ -231,13 +218,13 @@ var Snap = function(userOpts) {
                         n = 0;
                     }
 
-                    if( utils.canTransform() ){
+                    if(settings.enableCSS3Transform){
                         var theTranslate = `translate3d(${n}px, 0,0)`;
                         settings.element.style[cache.vendor+'Transform'] = theTranslate;
                     } else {
                         settings.element.style.width = (window.innerWidth || document.documentElement.clientWidth)+'px';
 
-                        settings.element.style.left = `${n}cat distpx`;
+                        settings.element.style.left = `${n}px`;
                         settings.element.style.right = '';
                     }
                 }

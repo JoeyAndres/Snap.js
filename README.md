@@ -39,9 +39,7 @@ A Library for creating beautiful mobile shelfs in Javascript
 ## Support
 * Firefox 10+
 * Wide Webkit Support (including Android WebKit 2.3.X)
-* IE 10
-* IE 9 Supports Toggling, Dragging but no Transitions
-* IE 7/8 Supports Toggling but no dragging or Transitions
+* IE 10, 11
 
 ## Installation
 
@@ -77,6 +75,7 @@ settings = {
     flickThreshold: 50,
     transitionSpeed: 0.3,
     easing: 'ease',
+    enableCSS3Transform: true,
     maxPosition: 266,
     minPosition: -266,
     tapToClose: true,
@@ -95,6 +94,7 @@ settings = {
 * `flickThreshold`: Number of pixels the user needs to swiftly travel to activate a "flick" open
 * `transitionSpeed`: The speed at which the pane slides open or closed
 * `easing`: The CSS3 Easing method you want to use for transitions
+* `enableCSS3Transform`: This is made available to increase performance in highly nested dom elements.
 * `maxPosition`: Maximum number of pixels the pane may be slid to the right
 * `minPosition`: Maximum number of pixels the pane may be slid to the left
 * `tapToClose`: If true, tapping an open pane will close it
