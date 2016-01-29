@@ -26,7 +26,8 @@ var Snap = function(userOpts) {
             tapToClose: true,
             touchToDrag: true,
             slideIntent: 40, // degrees
-            minDragDistance: 5
+            minDragDistance: 5,
+            stopPropagation: true
         },
         cache = {
             simpleStates: {
@@ -255,6 +256,8 @@ var Snap = function(userOpts) {
                     utils.events.removeEvent(settings.element, utils.eventType('up'), action.drag.endDrag);
                 },
                 startDrag: function(e) {
+                    if (settings.stopPropagation) e.stopPropagation();
+
                     // No drag on ignored elements
                     var target = e.target ? e.target : e.srcElement,
                         ignoreParent = utils.parentUntil(target, 'data-snap-ignore');
@@ -306,6 +309,7 @@ var Snap = function(userOpts) {
                 },
                 dragging: function(e) {
                     if (cache.isDragging && settings.touchToDrag) {
+                        if (settings.stopPropagation) e.stopPropagation();
 
                         var thePageX = utils.page('X', e),
                             thePageY = utils.page('Y', e),
@@ -412,6 +416,8 @@ var Snap = function(userOpts) {
                 },
                 endDrag: function(e) {
                     if (cache.isDragging) {
+                        if (settings.stopPropagation) e.stopPropagation();
+
                         utils.dispatchEvent('end');
                         var translated = action.translate.get.matrix(4);
 

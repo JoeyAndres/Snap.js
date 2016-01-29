@@ -1359,7 +1359,8 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
         tapToClose: true,
         touchToDrag: true,
         slideIntent: 40, // degrees
-        minDragDistance: 5
+        minDragDistance: 5,
+        stopPropagation: true
       },
           cache = {
         simpleStates: {
@@ -1588,6 +1589,8 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
             utils.events.removeEvent(settings.element, utils.eventType('up'), action.drag.endDrag);
           },
           startDrag: function startDrag(e) {
+            if (settings.stopPropagation) e.stopPropagation();
+
             // No drag on ignored elements
             var target = e.target ? e.target : e.srcElement,
                 ignoreParent = utils.parentUntil(target, 'data-snap-ignore');
@@ -1635,6 +1638,7 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
           },
           dragging: function dragging(e) {
             if (cache.isDragging && settings.touchToDrag) {
+              if (settings.stopPropagation) e.stopPropagation();
 
               var thePageX = utils.page('X', e),
                   thePageY = utils.page('Y', e),
@@ -1739,6 +1743,8 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
           },
           endDrag: function endDrag(e) {
             if (cache.isDragging) {
+              if (settings.stopPropagation) e.stopPropagation();
+
               utils.dispatchEvent('end');
               var translated = action.translate.get.matrix(4);
 
