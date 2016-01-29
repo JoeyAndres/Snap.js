@@ -1,7 +1,7 @@
 Package.describe({
     name: "jandres:snapjs",
     summary: "A Library for creating beautiful mobile shelfs in Javascript (Facebook and Path style side menus)",
-    version: "1.9.5",
+    version: "1.9.6",
     git: "https://github.com/JoeyAndres/Snap.js.git"
 });
 
