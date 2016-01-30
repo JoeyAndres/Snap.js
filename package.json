@@ -1,6 +1,6 @@
 {
   "name": "snap.js",
-  "version": "1.9.7",
+  "version": "2.0.1",
   "description": "A Library for creating beautiful mobile shelfs in Javascript",
   "main": "snap.js",
   "scripts": {
