@@ -1776,8 +1776,8 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
         }
       },
           _init = function _init(opts) {
-        if (opts.element) {
-          utils.deepExtend(settings, opts);
+        utils.deepExtend(settings, opts);
+        if (settings.element) {
           settings.element.setAttribute("touch-action", "pan-y");
         } else {
           throw "Snap's element argument does not exist.";

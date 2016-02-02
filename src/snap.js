@@ -449,8 +449,8 @@ var Snap = function(userOpts) {
             }
         },
         _init = function(opts) {
-            if (opts.element) {
-                utils.deepExtend(settings, opts);
+            utils.deepExtend(settings, opts);
+            if (settings.element) {
                 settings.element.setAttribute("touch-action", "pan-y");
             } else {
                 throw "Snap's element argument does not exist.";
