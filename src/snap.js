@@ -8,8 +8,6 @@
  * Copyright 2016, Joey Andres
  */
 
-require("pepjs");
-
 var Snap = function(userOpts) {
     var settings = {
             element: null,
@@ -56,7 +54,9 @@ var Snap = function(userOpts) {
                 return eventTypes[action];
             },
             page: function(t, e){
-                return e[`page${t}`];
+                return (typeof e[`page${t}`] !== 'undefined') ?
+                    e[`page${t}`] :
+                    e.touches.length > 0 ? e.touches[0][`page${t}`] : e.changedTouches[0][`page${t}`];
             },
             klass: {
                 has: function(el, name){
@@ -225,14 +225,47 @@ var Snap = function(userOpts) {
                 listen: function() {
                     cache.translation = 0;
                     cache.easing = false;
-                    utils.events.addEvent(settings.element, utils.eventType('down'), action.drag.startDrag);
-                    utils.events.addEvent(settings.element, utils.eventType('move'), action.drag.dragging);
-                    utils.events.addEvent(settings.element, utils.eventType('up'), action.drag.endDrag);
+
+                    ['touchstart', 'pointerdown', 'MSPointerDown', 'mousedown'].forEach(e =>
+                        utils.events.addEvent(settings.element, e, action.drag.handleEvent));
+                    ['touchmove', 'pointermove', 'MSPointerMove', 'mousemove'].forEach(e =>
+                        utils.events.addEvent(settings.element, e, action.drag.handleEvent));
+                    ['touchend', 'pointerup', 'MSPointerUp', 'mouseup', 'touchcancel', 'pointercancel', 'MSPointerCancel', 'mousecancel'].forEach(e =>
+                        utils.events.addEvent(settings.element, e, action.drag.handleEvent));
                 },
                 stopListening: function() {
-                    utils.events.removeEvent(settings.element, utils.eventType('down'), action.drag.startDrag);
-                    utils.events.removeEvent(settings.element, utils.eventType('move'), action.drag.dragging);
-                    utils.events.removeEvent(settings.element, utils.eventType('up'), action.drag.endDrag);
+                    ['touchstart', 'pointerdown', 'MSPointerDown', 'mousedown'].forEach(e =>
+                        utils.events.removeEvent(settings.element, e, action.drag.handleEvent));
+                    ['touchmove', 'pointermove', 'MSPointerMove', 'mousemove'].forEach(e =>
+                        utils.events.removeEvent(settings.element, e, action.drag.handleEvent));
+                    ['touchend', 'pointerup', 'MSPointerUp', 'mouseup', 'touchcancel', 'pointercancel', 'MSPointerCancel', 'mousecancel'].forEach(e =>
+                        utils.events.removeEvent(settings.element, e, action.drag.handleEvent));
+                },
+                handleEvent: function(e) {
+                    switch ( e.type ) {
+                        case 'touchstart':
+                        case 'pointerdown':
+                        case 'MSPointerDown':
+                        case 'mousedown':
+                            action.drag.startDrag(e);
+                            break;
+                        case 'touchmove':
+                        case 'pointermove':
+                        case 'MSPointerMove':
+                        case 'mousemove':
+                            action.drag.dragging(e);
+                            break;
+                        case 'touchend':
+                        case 'pointerup':
+                        case 'MSPointerUp':
+                        case 'mouseup':
+                        case 'touchcancel':
+                        case 'pointercancel':
+                        case 'MSPointerCancel':
+                        case 'mousecancel':
+                            action.drag.endDrag(e);
+                            break;
+                    }
                 },
                 startDrag: function(e) {
                     if (settings.stopPropagation) e.stopPropagation();

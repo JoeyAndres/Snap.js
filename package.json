@@ -1,6 +1,6 @@
 {
   "name": "snap.js",
-  "version": "2.0.2",
+  "version": "2.0.6",
   "description": "A Library for creating beautiful mobile shelfs in Javascript",
   "main": "snap.js",
   "scripts": {
@@ -19,9 +19,7 @@
     "url": "https://github.com/JoeyAndres/Snap.js/issues"
   },
   "homepage": "https://github.com/JoeyAndres/Snap.js",
-  "dependencies": {
-    "pepjs": "^0.4.1"
-  },
+  "dependencies": {},
   "devDependencies": {
     "babel-preset-es2015": "^6.3.13",
     "gulp": "^3.9.0",
