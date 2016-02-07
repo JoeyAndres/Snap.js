@@ -44,6 +44,7 @@ var Snap = function(userOpts) {
         },
         eventList = {},
         utils = {
+            hasTouch: ('ontouchstart' in window) || window.DocumentTouch && document instanceof DocumentTouch,
             eventType: function(action) {
                 var eventTypes = {
                     down: 'pointerdown',
@@ -54,9 +55,9 @@ var Snap = function(userOpts) {
                 return eventTypes[action];
             },
             page: function(t, e){
-                return (typeof e[`page${t}`] !== 'undefined') ?
-                    e[`page${t}`] :
-                    e.touches.length > 0 ? e.touches[0][`page${t}`] : e.changedTouches[0][`page${t}`];
+                return utils.hasTouch ?
+                    (e.touches.length > 0 ? e.touches[0][`page${t}`] : e.changedTouches[0][`page${t}`]) :
+                    e[`page${t}`];
             },
             klass: {
                 has: function(el, name){
