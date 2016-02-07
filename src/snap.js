@@ -56,7 +56,10 @@ var Snap = function(userOpts) {
             },
             page: function(t, e){
                 return utils.hasTouch ?
-                    (e.touches.length > 0 ? e.touches[0][`page${t}`] : e.changedTouches[0][`page${t}`]) :
+                    (e.touches ?
+                        (e.touches.length > 0 ? e.touches[0][`page${t}`] : e.changedTouches[0][`page${t}`]) :
+                        e[`page${t}`]
+                    ):
                     e[`page${t}`];
             },
             klass: {
