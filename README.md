@@ -1,11 +1,7 @@
 # Snap.js
 A Library for creating beautiful mobile shelfs in Javascript
 
-<a href="http://www.screenr.com/embed/0EJ7" target="_blank">View Video Preview</a>
-
-<a href="http://jakiestfu.github.io/Snap.js/" target="_blank">View Demos</a>
-
-<a href="http://www.screenr.com/embed/0EJ7" target="_blank"><img src="http://i.imgur.com/t3mGcEx.gif"></a>
+[Demo](http://jandres-ionic.meteor.com/lists/complex)
 
 * [Features](#features)
 * [Support](#support)
@@ -20,7 +16,6 @@ A Library for creating beautiful mobile shelfs in Javascript
 * [Extras](#extras)
 
 ## Features
-* Library Independent
 * High Customization
 * Flick Support
 * User Intent Detection
@@ -34,25 +29,24 @@ A Library for creating beautiful mobile shelfs in Javascript
 * Definable Easing Mode
 * Enable/Disable Events
 * Disabled Sides (left or right)
-* Supports [Ratchet](http://maker.github.com/ratchet/) (with templates!)
 
 ## Support
 * Firefox 10+
 * Wide Webkit Support (including Android WebKit 2.3.X)
-* IE 10, 11
+* IE 9, 10, 11
 
 ## Installation
 
 As standalone just include the file in a script tag:
 
 ```html
-<script src="snap.js"></script>
+<script src="snap-standalone.js"></script>
 ```
 
-As a <a href="http://component.io" target="_blank">web component</a> do:
+Meteor:
 
-```shell
-$ component install jakiestfu/Snap.js
+```bash
+meteor add jandres:snapjs
 ```
 
 ## Usage
@@ -81,7 +75,8 @@ settings = {
     tapToClose: true,
     touchToDrag: true,
     slideIntent: 40,
-    minDragDistance: 5
+    minDragDistance: 5,
+    stopPropagation: true
 }
 ```
 
@@ -101,6 +96,7 @@ settings = {
 * `touchToDrag`: If true, dragging the target `settings.element` will open/close the pane
 * `minDragDistance`: The minimum amount of pixels the user needs to drag within the `slideIntent` degrees to move the pane 
 * `slideIntent`: The number of degrees the user must initiate sliding in towards the left or right (see diagram below)
+* `stopPropagation`: Prevents the swipe events to be propagated up the DOM truee.
 
 Notes on Slide Intent: The slide intent is an int between 0 and 90, and represents the degrees in the first quadrant of a circle that you would like to have mirrored on the X *and* Y axis. For example, if you have 40 set as your `slideIntent` value, the user would only be able to slide the pane by dragging in the blue area in the diagram below. Once intent has been defined, it will not change until the user releases.
 
@@ -287,28 +283,6 @@ Snap.js supports cascading cancellation of events via a data attribute `data-sna
 
 All interactions on children elements of the element with the `data-snap-ignore` attribute will have their Snap.js events ignored.
 
-
-### - I am using Push.js from Ratchet, I keep losing my events on my elements, how can I fix this?
-Simple. As wack as Push.js is (yes, it is in desperate need of attention as of v1.0.0), we can still solve this problem with it's only callback, `'push'`.
-
-```javascript
-// The function that will initialize your Snap.js instance
-var doSnap = function(){
-    if(window.snapper){
-         // Snap.js already exists, we just need to re-bind events
-        window.snapper.enable();
-    } else {
-        // Initialize Snap.js
-        window.snapper = new Snap({
-            element: document.getElementById('content')
-        });
-    } 
-};
-
-window.addEventListener('push', doSnap);
-doSnap();
-```
-
 ### - Snap.js works on my Android device but i cannot scroll the content in my drawers, what gives?
 Older Android devices (and iPhone as well) do not have native support for overflow scrolling. To solve this, you may use the wonderful library called [iScroll](https://github.com/cubiq/iscroll)
 
@@ -325,14 +299,6 @@ To solve the flicker, apply the following CSS to the element in question
     -ms-backface-visibility:hidden; /* Internet Explorer 10+ */
 }
 ```
-
-## Compliments
-
-This code attempts to make your webapp's feel more "native". These other repos go well with it, too!
-
-* [Snap.js](https://github.com/jakiestfu/Snap.js)
-* [AppScroll.js](https://github.com/jakiestfu/AppScroll)
-* [fastclick](https://github.com/ftlabs/fastclick)
 
 ## Licensing
 
