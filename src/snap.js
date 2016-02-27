@@ -272,8 +272,6 @@ var Snap = function(userOpts) {
                     }
                 },
                 startDrag: function(e) {
-                    if (settings.stopPropagation) e.stopPropagation();
-
                     // No drag on ignored elements
                     var target = e.target ? e.target : e.srcElement,
                         ignoreParent = utils.parentUntil(target, 'data-snap-ignore');
@@ -325,7 +323,7 @@ var Snap = function(userOpts) {
                 },
                 dragging: function(e) {
                     if (cache.isDragging && settings.touchToDrag) {
-                        if (settings.stopPropagation) e.stopPropagation();
+                        if (cache.hasIntent && settings.stopPropagation) e.stopPropagation();
 
                         var thePageX = utils.page('X', e),
                             thePageY = utils.page('Y', e),
@@ -359,6 +357,7 @@ var Snap = function(userOpts) {
                                 cache.hasIntent = false;
                             } else {
                                 cache.hasIntent = true;
+                                if (settings.stopPropagation) e.stopPropagation();
                             }
                             cache.intentChecked = true;
                         }
@@ -433,8 +432,6 @@ var Snap = function(userOpts) {
                 },
                 endDrag: function(e) {
                     if (cache.isDragging) {
-                        if (settings.stopPropagation) e.stopPropagation();
-
                         utils.dispatchEvent('end');
                         var translated = action.translate.get.matrix(4);
 

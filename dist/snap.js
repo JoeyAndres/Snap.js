@@ -294,8 +294,6 @@
                         }
                     },
                     startDrag: function startDrag(e) {
-                        if (settings.stopPropagation) e.stopPropagation();
-
                         // No drag on ignored elements
                         var target = e.target ? e.target : e.srcElement,
                             ignoreParent = utils.parentUntil(target, 'data-snap-ignore');
@@ -343,7 +341,7 @@
                     },
                     dragging: function dragging(e) {
                         if (cache.isDragging && settings.touchToDrag) {
-                            if (settings.stopPropagation) e.stopPropagation();
+                            if (cache.hasIntent && settings.stopPropagation) e.stopPropagation();
 
                             var thePageX = utils.page('X', e),
                                 thePageY = utils.page('Y', e),
@@ -377,6 +375,7 @@
                                     cache.hasIntent = false;
                                 } else {
                                     cache.hasIntent = true;
+                                    if (settings.stopPropagation) e.stopPropagation();
                                 }
                                 cache.intentChecked = true;
                             }
@@ -449,8 +448,6 @@
                     },
                     endDrag: function endDrag(e) {
                         if (cache.isDragging) {
-                            if (settings.stopPropagation) e.stopPropagation();
-
                             utils.dispatchEvent('end');
                             var translated = action.translate.get.matrix(4);
 
