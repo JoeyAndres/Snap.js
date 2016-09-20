@@ -476,24 +476,24 @@
                                             action.translate.easeTo(settings.maxPosition); // Open Left
                                         }
                                 } else {
-                                        action.translate.easeTo(0); // Close Left
-                                    }
+                                    action.translate.easeTo(0); // Close Left
+                                }
                                 // Revealing Right
                             } else if (cache.simpleStates.opening === 'right') {
-                                    // Halfway, Flicking, or Too Far Out
-                                    if (cache.simpleStates.halfway || cache.simpleStates.hyperExtending || cache.simpleStates.flick) {
-                                        if (cache.simpleStates.flick && cache.simpleStates.towards === 'right') {
-                                            // Flicking Closed
-                                            action.translate.easeTo(0);
-                                        } else if (cache.simpleStates.flick && cache.simpleStates.towards === 'left' || // Flicking Open OR
-                                        cache.simpleStates.halfway || cache.simpleStates.hyperExtending // At least halfway open OR hyperextending
-                                        ) {
-                                                action.translate.easeTo(settings.minPosition); // Open Right
-                                            }
-                                    } else {
-                                            action.translate.easeTo(0); // Close Right
+                                // Halfway, Flicking, or Too Far Out
+                                if (cache.simpleStates.halfway || cache.simpleStates.hyperExtending || cache.simpleStates.flick) {
+                                    if (cache.simpleStates.flick && cache.simpleStates.towards === 'right') {
+                                        // Flicking Closed
+                                        action.translate.easeTo(0);
+                                    } else if (cache.simpleStates.flick && cache.simpleStates.towards === 'left' || // Flicking Open OR
+                                    cache.simpleStates.halfway || cache.simpleStates.hyperExtending // At least halfway open OR hyperextending
+                                    ) {
+                                            action.translate.easeTo(settings.minPosition); // Open Right
                                         }
+                                } else {
+                                    action.translate.easeTo(0); // Close Right
                                 }
+                            }
                             cache.isDragging = false;
                             cache.startDragX = utils.page('X', e);
                         }
