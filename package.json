@@ -4,7 +4,9 @@
   "description": "A Library for creating beautiful mobile shelfs in Javascript",
   "main": "snap.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "build": "gulp",
+    "watch": "gulp watch"
   },
   "repository": {
     "type": "git",

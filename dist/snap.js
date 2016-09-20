@@ -189,6 +189,7 @@
                         }
                     },
                     easeCallback: function easeCallback() {
+                        utils.events.removeEvent(settings.element, utils.transitionCallback(), action.translate.easeCallback);
                         settings.element.style[cache.vendor + 'Transition'] = '';
                         cache.translation = action.translate.get.matrix(4);
                         cache.easing = false;
@@ -197,10 +198,12 @@
                         if (cache.easingTo === 0) {
                             utils.klass.remove(document.body, 'snapjs-right');
                             utils.klass.remove(document.body, 'snapjs-left');
+                            utils.dispatchEvent('close');
+                        } else {
+                            utils.dispatchEvent('open');
                         }
 
                         utils.dispatchEvent('animated');
-                        utils.events.removeEvent(settings.element, utils.transitionCallback(), action.translate.easeCallback);
                     },
                     easeTo: function easeTo(n) {
                         cache.easing = true;
@@ -455,7 +458,6 @@
 
                             // Tap Close
                             if (cache.dragWatchers.current === 0 && translated !== 0 && settings.tapToClose) {
-                                utils.dispatchEvent('close');
                                 utils.events.prevent(e);
                                 action.translate.easeTo(0);
                                 cache.isDragging = false;
@@ -476,24 +478,24 @@
                                             action.translate.easeTo(settings.maxPosition); // Open Left
                                         }
                                 } else {
-                                        action.translate.easeTo(0); // Close Left
-                                    }
+                                    action.translate.easeTo(0); // Close Left
+                                }
                                 // Revealing Right
                             } else if (cache.simpleStates.opening === 'right') {
-                                    // Halfway, Flicking, or Too Far Out
-                                    if (cache.simpleStates.halfway || cache.simpleStates.hyperExtending || cache.simpleStates.flick) {
-                                        if (cache.simpleStates.flick && cache.simpleStates.towards === 'right') {
-                                            // Flicking Closed
-                                            action.translate.easeTo(0);
-                                        } else if (cache.simpleStates.flick && cache.simpleStates.towards === 'left' || // Flicking Open OR
-                                        cache.simpleStates.halfway || cache.simpleStates.hyperExtending // At least halfway open OR hyperextending
-                                        ) {
-                                                action.translate.easeTo(settings.minPosition); // Open Right
-                                            }
-                                    } else {
-                                            action.translate.easeTo(0); // Close Right
+                                // Halfway, Flicking, or Too Far Out
+                                if (cache.simpleStates.halfway || cache.simpleStates.hyperExtending || cache.simpleStates.flick) {
+                                    if (cache.simpleStates.flick && cache.simpleStates.towards === 'right') {
+                                        // Flicking Closed
+                                        action.translate.easeTo(0);
+                                    } else if (cache.simpleStates.flick && cache.simpleStates.towards === 'left' || // Flicking Open OR
+                                    cache.simpleStates.halfway || cache.simpleStates.hyperExtending // At least halfway open OR hyperextending
+                                    ) {
+                                            action.translate.easeTo(settings.minPosition); // Open Right
                                         }
+                                } else {
+                                    action.translate.easeTo(0); // Close Right
                                 }
+                            }
                             cache.isDragging = false;
                             cache.startDragX = utils.page('X', e);
                         }
@@ -517,7 +519,6 @@
              * Public
              */
             this.open = function (side) {
-                utils.dispatchEvent('open');
                 utils.klass.remove(document.body, 'snapjs-expand-left');
                 utils.klass.remove(document.body, 'snapjs-expand-right');
 
@@ -536,7 +537,6 @@
                 }
             };
             this.close = function () {
-                utils.dispatchEvent('close');
                 action.translate.easeTo(0);
             };
             this.expand = function (side) {
