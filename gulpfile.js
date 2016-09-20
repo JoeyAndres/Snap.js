@@ -49,4 +49,5 @@ gulp.task('watchers', function () {
     gulp.watch(paths.js, ['js']);
 });
 
-gulp.task('default', ['css', 'js', 'watchers']);
+gulp.task('default', ['css', 'js']);
+gulp.task('watch', ['css', 'js', 'watchers']);
